@@ -138,21 +138,22 @@ class State:
         return State(left=['f', 'g', 'c', 'w'], right=[])
 
 
-# creating initial state
-initialState = State.initial()
+if __name__ == "__main__":
+    # creating initial state
+    initialState = State.initial()
 
-# initializing queue
-q = [initialState]
-# intializing visited array
-visited = [int(initialState)]
+    # initializing queue
+    q = [initialState]
+    # intializing visited array
+    visited = [int(initialState)]
 
-# applying bfs:
-while(len(q) != 0):
-    state = q.pop(0)
-    
-    print(state)
+    # applying bfs:
+    while(len(q) != 0):
+        state = q.pop(0)
+        
+        print(state)
 
-    nextStates = state.next()
-    if nextStates is not None:
-        q.extend(nextStates)
+        nextStates = state.next()
+        if nextStates is not None:
+            q.extend(nextStates)
 
