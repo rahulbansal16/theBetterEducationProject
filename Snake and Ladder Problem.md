@@ -2,7 +2,7 @@
 
 Problem statement: Given that you have control on the outcome of the dice rolled in a snake and ladder game, find the minimum number of throws required to reach the end of the game. Below is the image of a snake and ladder board on which we have to find the number of throws.
 
-![1571553012293](C:\Users\risha\AppData\Roaming\Typora\typora-user-images\1571553012293.png)
+![snakeAndLadderBoard](assets\snakeAndLadderBoard.png)
 
 
 
