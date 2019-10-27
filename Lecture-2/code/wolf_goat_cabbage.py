@@ -25,14 +25,27 @@ class State:
 
         # looping through every thing in the farmer side except the farmer
         for thing in [i for i in farmerSide if i != 'f']:
-            # getting the states after moving the farmer and the thing to the 
+            # getting the state after moving the farmer and the thing to the 
             # other side
-            for state in State.__moveFarmerAndThing(self, thing):  
-                # if state is a valid state and it is not visited,
-                # append it and mark as visited  
-                if state.isValid() and int(state) not in visited:
-                    states.append(state)
-                    visited.append(int(state))
+            nextState = State.__moveFarmerAndThing(self, thing)
+            # if state is a valid state and it is not visited,
+            # append it. 
+            if nextState.isValid():
+                states.append(nextState)
+
+        # checking if the farmer was on the right side. If he was on the right side
+        # another state is possible. That state is when the farmer comes back alone
+        if farmerSide == self.rightSide:
+            # making the state
+            nextState = State(
+                    # adding farmer to the left side
+                    left=self.leftSide + ['f'],
+                    # removing farmer from right side
+                    right=[i for i in self.rightSide if i != 'f']
+                )
+            # appending the state if the state is valid
+            if nextState.isValid():
+                states.append(nextState)
 
         return states
 
@@ -76,54 +89,30 @@ class State:
         return "State [left side: {}, right side: {}".format(self.leftSide, self.rightSide)
 
     @staticmethod
-    def __moveFarmerAndThing(state, thing) -> List['State']:
+    def __moveFarmerAndThing(state, thing) -> 'State':
         """
         Moves farmer and a thing from one side to another.
         
         Returns:
-            List['State']: A list containing the possible states that result in 
-            such movement.
+            'State': The state that result in such movement.
         """
 
         # if the farmer is on the left side, run if body
         if 'f' in state.leftSide:
-            # generate a list containing all things except the farmer and `thing` for 
-            # the left side
-            leftSide = [i for i in state.leftSide if i != 'f' and i != thing]
-            # make a list containing the right side things, the farmer and `thing`
-            rightSide = state.rightSide + ['f', thing]
-            # create a state object and return it
-            return [State(left=leftSide, right=rightSide)]
+            return State(
+                # removing farmer and `thing` from left side
+                left=[i for i in state.leftSide if i != 'f' and i != thing],
+                # adding farmer and `thing` to right side
+                right=state.rightSide + ['f', thing]
+            )
 
-        # this code runs when the farmer is on the right side. When the farmer
-        # is on the right side, he can either come back with a thing or come back
-        # alone. Hence there are two possible states.
-
-        # variable that stores the possible states
-        states = []
-        
-        # when the farmer comes back with a thing:
-
-        # generate list containing all things except the farmer and `thing` for the
-        # right side
-        rightSide = [i for i in state.rightSide if i != 'f' and i != thing]
-
-        # create a state with the generated list for the right side, and left side
-        # things + farmer and `thing` for the left side
-        states.append(State(left=state.leftSide + ['f', thing], right=rightSide))
-
-        # when farmer comes back alone:
-
-        # generate a list containing all things except farmer for the right side
-        rightSide = [i for i in state.rightSide if i != 'f']
-
-        # create a state with the generated list for the right side and left side
-        # things + farmer for the left side
-        states.append(State(left=state.leftSide + ['f'], right=rightSide))
-
-        # return the states
-        return states
-    
+        # this code runs when the farmer is on the right side. 
+        return State(
+            # adding farmer and `thing` to the left side
+            left=state.leftSide + ['f', thing],
+            # removing farmer and `thing` from right side
+            right=[i for i in state.rightSide if i != 'f' and i != thing]
+        )
         
 
     @staticmethod
@@ -145,15 +134,27 @@ if __name__ == "__main__":
     # initializing queue
     q = [initialState]
     # intializing visited array
-    visited = [int(initialState)]
+    visited = []
 
     # applying bfs:
     while(len(q) != 0):
+        # dequeue the queue
         state = q.pop(0)
-        
+
+        # if the state has already been visited, run the next iteration
+        if int(state) in visited:
+            continue
+
+        # visit the state    
         print(state)
-
+        # add state to visited array
+        visited.append(int(state))
+        # generate the next states
         nextStates = state.next()
-        if nextStates is not None:
-            q.extend(nextStates)
 
+        # add the next states to the queue if they have not been 
+        # visited
+        for s in nextStates:
+            if int(s) not in visited:
+                q.append(s)
+        
