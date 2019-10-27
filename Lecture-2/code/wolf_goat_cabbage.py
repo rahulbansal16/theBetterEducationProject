@@ -1,4 +1,4 @@
-from typing import List, Tuple
+from typing import List
 
 class State:
     """
@@ -38,11 +38,11 @@ class State:
         if farmerSide == self.rightSide:
             # making the state
             nextState = State(
-                    # adding farmer to the left side
-                    left=self.leftSide + ['f'],
-                    # removing farmer from right side
-                    right=[i for i in self.rightSide if i != 'f']
-                )
+                # adding farmer to the left side
+                left=self.leftSide + ['f'],
+                # removing farmer from right side
+                right=[i for i in self.rightSide if i != 'f']
+            )
             # appending the state if the state is valid
             if nextState.isValid():
                 states.append(nextState)
@@ -137,24 +137,24 @@ if __name__ == "__main__":
     visited = []
 
     # applying bfs:
-    while(len(q) != 0):
+    while len(q) != 0:
         # dequeue the queue
-        state = q.pop(0)
+        currentState = q.pop(0)
 
         # if the state has already been visited, run the next iteration
-        if int(state) in visited:
+        if int(currentState) in visited:
             continue
 
         # visit the state    
-        print(state)
+        print(currentState)
         # add state to visited array
-        visited.append(int(state))
+        visited.append(int(currentState))
         # generate the next states
-        nextStates = state.next()
+        nextStates = currentState.next()
 
         # add the next states to the queue if they have not been 
         # visited
-        for s in nextStates:
-            if int(s) not in visited:
-                q.append(s)
+        for _state in nextStates:
+            if int(_state) not in visited:
+                q.append(_state)
         
